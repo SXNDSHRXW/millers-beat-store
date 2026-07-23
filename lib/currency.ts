@@ -15,6 +15,39 @@ export type CurrencyCode =
 
 export const currencyOptions: CurrencyCode[] = ['USD', 'EUR', 'GBP', 'CAD', 'AUD', 'JPY'];
 
+let ratesCache: { rates: Record<string, number>; fetchedAt: number } | null = null;
+const CACHE_TTL = 60 * 60 * 1000; // 1 hour
+
+async function getExchangeRates(): Promise<Record<string, number>> {
+  if (ratesCache && Date.now() - ratesCache.fetchedAt < CACHE_TTL) {
+    return ratesCache.rates;
+  }
+
+  try {
+    const res = await fetch('https://api.frankfurter.dev/latest?base=GBP');
+    if (!res.ok) throw new Error('Failed to fetch rates');
+    const data = await res.json();
+    ratesCache = { rates: data.rates, fetchedAt: Date.now() };
+    return data.rates;
+  } catch {
+    // Fallback rates if API fails
+    return {
+      USD: 1.27, EUR: 1.17, GBP: 1, CAD: 1.72, AUD: 1.93, JPY: 197,
+      CHF: 1.13, SEK: 13.6, NOK: 13.9, DKK: 8.7, PLN: 5.1,
+    };
+  }
+}
+
+export async function convertFromGBP(gbpCents: number, targetCurrency: CurrencyCode): Promise<number> {
+  if (targetCurrency === 'GBP') return gbpCents;
+
+  const rates = await getExchangeRates();
+  const rate = rates[targetCurrency];
+  if (!rate) return gbpCents;
+
+  return Math.round((gbpCents / 100) * rate * 100);
+}
+
 const countryCurrencyMap: Record<string, CurrencyCode> = {
   US: 'USD',
   GB: 'GBP',
@@ -131,6 +164,21 @@ export function formatPrice(cents: number, currency: CurrencyCode = 'USD', local
   });
 
   return formatter.format(amount);
+}
+
+export function useConvertedPrice(gbpCents: number) {
+  const { activeCurrency } = useCurrencyPreference();
+  const [convertedCents, setConvertedCents] = useState<number | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    convertFromGBP(gbpCents, activeCurrency).then((cents) => {
+      if (active) setConvertedCents(cents);
+    });
+    return () => { active = false; };
+  }, [gbpCents, activeCurrency]);
+
+  return convertedCents;
 }
 
 export function useCurrencyPreference() {

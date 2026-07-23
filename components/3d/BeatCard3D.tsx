@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { Play, Pause, ShoppingCart } from 'lucide-react';
 import { Beat } from '@/types';
 import { formatPrice, getBeatStats } from '@/lib/utils';
-import { useCurrencyPreference } from '@/lib/currency';
+import { useCurrencyPreference, useConvertedPrice } from '@/lib/currency';
 import { useAudioStore, useCursorStore } from '@/lib/store';
 
 interface BeatCard3DProps {
@@ -22,6 +22,7 @@ export function BeatCard3D({ beat, index = 0 }: BeatCard3DProps) {
   const { currentBeat, isPlaying, setCurrentBeat, togglePlay } = useAudioStore();
   const setCursorType = useCursorStore((s) => s.setCursorType);
   const { activeCurrency, locale } = useCurrencyPreference();
+  const convertedWav = useConvertedPrice(beat.priceWav);
   const stats = getBeatStats(beat);
   const isCurrentBeat = currentBeat?.id === beat.id;
   const isPlayingThis = isCurrentBeat && isPlaying;
@@ -159,7 +160,9 @@ export function BeatCard3D({ beat, index = 0 }: BeatCard3DProps) {
                 >
                   <div className="flex gap-2">
                     <span className="text-sm font-bold text-neon-green">
-                      {formatPrice(beat.priceWav, activeCurrency, locale)}
+                      {convertedWav !== null
+                        ? formatPrice(convertedWav, activeCurrency, locale)
+                        : '...'}
                     </span>
                     <span className="text-xs text-gray-500">.WAV</span>
                   </div>

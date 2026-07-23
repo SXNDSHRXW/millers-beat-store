@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Play, Pause, ShoppingCart, Share2, ArrowLeft } from 'lucide-react';
 import { Beat } from '@/types';
 import { formatPrice, getBeatStats } from '@/lib/utils';
-import { useCurrencyPreference, currencyOptions } from '@/lib/currency';
+import { useCurrencyPreference, currencyOptions, useConvertedPrice } from '@/lib/currency';
 import { useAudioStore, useCursorStore } from '@/lib/store';
 
 interface BeatDetailProps {
@@ -18,6 +18,8 @@ export function BeatDetail({ beat }: BeatDetailProps) {
   const { currentBeat, isPlaying, setCurrentBeat, togglePlay } = useAudioStore();
   const setCursorType = useCursorStore((s) => s.setCursorType);
   const { activeCurrency, selectedCurrency, setSelectedCurrency, locale } = useCurrencyPreference();
+  const convertedWav = useConvertedPrice(beat.priceWav);
+  const convertedStems = useConvertedPrice(beat.priceStems);
   const stats = getBeatStats(beat);
   const isCurrentBeat = currentBeat?.id === beat.id;
   const isPlayingThis = isCurrentBeat && isPlaying;
@@ -181,7 +183,9 @@ export function BeatDetail({ beat }: BeatDetailProps) {
                   }`}
                 >
                   <div className="text-2xl font-bold text-neon-green mb-1">
-                    {formatPrice(beat.priceWav, activeCurrency, locale)}
+                    {convertedWav !== null
+                      ? formatPrice(convertedWav, activeCurrency, locale)
+                      : '...'}
                   </div>
                   <div className="text-xs tracking-wider text-gray-400">.WAV LICENSE</div>
                   <div className="text-[10px] text-gray-600 mt-2">
@@ -199,7 +203,9 @@ export function BeatDetail({ beat }: BeatDetailProps) {
                   }`}
                 >
                   <div className="text-2xl font-bold text-neon-green mb-1">
-                    {formatPrice(beat.priceStems, activeCurrency, locale)}
+                    {convertedStems !== null
+                      ? formatPrice(convertedStems, activeCurrency, locale)
+                      : '...'}
                   </div>
                   <div className="text-xs tracking-wider text-gray-400">.WAV + STEMS</div>
                   <div className="text-[10px] text-gray-600 mt-2">
