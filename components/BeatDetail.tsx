@@ -30,23 +30,35 @@ export function BeatDetail({ beat }: BeatDetailProps) {
     }
   };
 
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
+
   const handleCheckout = async () => {
-    const priceId = selectedLicense === 'wav' ? beat.stripeWavId : beat.stripeStemsId;
+    setCheckoutError(null);
+    setIsCheckingOut(true);
+    try {
+      const priceId = selectedLicense === 'wav' ? beat.stripeWavId : beat.stripeStemsId;
 
-    const res = await fetch('/api/checkout', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        beatId: beat.id,
-        licenseType: selectedLicense,
-        priceId,
-        slug: beat.slug,
-        currency: activeCurrency,
-      }),
-    });
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          beatId: beat.id,
+          licenseType: selectedLicense,
+          priceId,
+          slug: beat.slug,
+          currency: activeCurrency,
+        }),
+      });
 
-    const { url } = await res.json();
-    if (url) window.location.href = url;
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Checkout failed');
+      if (data.url) window.location.href = data.url;
+    } catch (err: any) {
+      setCheckoutError(err.message);
+    } finally {
+      setIsCheckingOut(false);
+    }
   };
 
   const statLabels = ['ATTACK', 'DEFENSE', 'SPEED', 'SPECIAL'];
@@ -216,13 +228,26 @@ export function BeatDetail({ beat }: BeatDetailProps) {
               {/* Buy Button */}
               <button
                 onClick={handleCheckout}
-                className="w-full py-4 bg-neon-green text-void font-bold tracking-[0.3em] text-lg hover:brightness-110 transition-all box-glow-green flex items-center justify-center gap-3"
+                disabled={isCheckingOut}
+                className="w-full py-4 bg-neon-green text-void font-bold tracking-[0.3em] text-lg hover:brightness-110 transition-all box-glow-green flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
                 onMouseEnter={() => setCursorType('buy')}
                 onMouseLeave={() => setCursorType('default')}
               >
-                <ShoppingCart size={20} />
-                BUY {selectedLicense === 'wav' ? '.WAV' : '.WAV + STEMS'}
+                {isCheckingOut ? (
+                  <>PROCESSING...</>
+                ) : (
+                  <>
+                    <ShoppingCart size={20} />
+                    BUY {selectedLicense === 'wav' ? '.WAV' : '.WAV + STEMS'}
+                  </>
+                )}
               </button>
+
+              {checkoutError && (
+                <p className="text-center text-xs text-red-400 tracking-wider">
+                  {checkoutError}
+                </p>
+              )}
 
               <p className="text-center text-xs text-gray-600 tracking-wider">
                 SECURE CHECKOUT VIA STRIPE • INSTANT DELIVERY
