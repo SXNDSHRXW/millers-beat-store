@@ -3,7 +3,7 @@ import { createCheckoutSession } from '@/lib/stripe';
 
 export async function POST(req: Request) {
   try {
-    const { priceId, beatId, licenseType, slug, currency } = await req.json();
+    const { priceId, beatId, licenseType, slug, currency, beatTitle } = await req.json();
 
     if (!priceId || !beatId || !licenseType || !slug) {
       return NextResponse.json(
@@ -18,6 +18,7 @@ export async function POST(req: Request) {
       licenseType,
       slug,
       currency,
+      beatTitle,
     });
 
     return NextResponse.json({ url: session.url });

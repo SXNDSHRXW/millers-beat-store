@@ -18,12 +18,14 @@ export async function createCheckoutSession({
   licenseType,
   slug,
   currency,
+  beatTitle,
 }: {
   priceId: string;
   beatId: string;
   licenseType: 'wav' | 'stems';
   slug: string;
   currency?: string;
+  beatTitle?: string;
 }) {
   const session = await getStripe().checkout.sessions.create({
     payment_method_types: ['card'],
@@ -40,6 +42,7 @@ export async function createCheckoutSession({
       beatId,
       licenseType,
       currency: currency || 'USD',
+      beatTitle: beatTitle || '',
     },
   });
 

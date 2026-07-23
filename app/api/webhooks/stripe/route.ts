@@ -1,6 +1,8 @@
 import { headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { markBeatAsSold } from '@/lib/supabase';
+import { sendFulfillmentEmail } from '@/lib/email';
 
 let _stripe: Stripe | null = null;
 function getStripe() {
@@ -38,8 +40,30 @@ export async function POST(req: Request) {
   switch (event.type) {
     case 'checkout.session.completed': {
       const session = event.data.object as Stripe.Checkout.Session;
-      // TODO: fulfill order — mark beat as sold, send download link, etc.
-      console.log('Payment successful for session:', session.id);
+      const beatId = session.metadata?.beatId;
+      const licenseType = (session.metadata?.licenseType as 'wav' | 'stems') || 'wav';
+      const customerEmail = session.customer_details?.email;
+
+      if (!beatId || !customerEmail) {
+        console.error('Missing beatId or customer email in session', session.id);
+        break;
+      }
+
+      // Mark beat as sold in the database
+      await markBeatAsSold(beatId);
+
+      // Build download URL — files should be hosted at a storage bucket
+      const downloadUrl = `${process.env.NEXT_PUBLIC_SITE_URL}/api/download/${beatId}?license=${licenseType}`;
+
+      // Send fulfillment email
+      await sendFulfillmentEmail({
+        to: customerEmail,
+        beatTitle: session.metadata?.beatTitle || 'Your Beat',
+        licenseType,
+        downloadUrl,
+      });
+
+      console.log('Order fulfilled for session:', session.id);
       break;
     }
     default:

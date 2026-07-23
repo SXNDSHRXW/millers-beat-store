@@ -51,6 +51,8 @@ export async function getBeats(filters?: {
     stripeStemsId: row.stripe_stems_id,
     priceWav: row.price_wav,
     priceStems: row.price_stems,
+    wavDownloadUrl: row.wav_download_url || null,
+    stemsDownloadUrl: row.stems_download_url || null,
     isSold: row.is_sold,
     soldAt: row.sold_at,
     battleWins: row.battle_wins || 0,
@@ -84,6 +86,8 @@ export async function getBeatBySlug(slug: string): Promise<Beat | null> {
     stripeStemsId: data.stripe_stems_id,
     priceWav: data.price_wav,
     priceStems: data.price_stems,
+    wavDownloadUrl: data.wav_download_url || null,
+    stemsDownloadUrl: data.stems_download_url || null,
     isSold: data.is_sold,
     soldAt: data.sold_at,
     battleWins: data.battle_wins || 0,
@@ -97,6 +101,18 @@ export async function markBeatAsSold(beatId: string): Promise<void> {
     .from('beats')
     .update({ is_sold: true, sold_at: new Date().toISOString() })
     .eq('id', beatId);
+}
+
+export async function getBeatDownloadUrl(beatId: string, licenseType: 'wav' | 'stems'): Promise<string | null> {
+  const column = licenseType === 'wav' ? 'wav_download_url' : 'stems_download_url';
+  const { data, error } = await getSupabase()
+    .from('beats')
+    .select(column)
+    .eq('id', beatId)
+    .single();
+
+  if (error || !data) return null;
+  return data[column] || null;
 }
 
 export async function recordPurchase(purchase: Omit<Purchase, 'id' | 'createdAt'>): Promise<void> {

@@ -50,6 +50,7 @@ export function BeatDetail({ beat }: BeatDetailProps) {
           priceId,
           slug: beat.slug,
           currency: activeCurrency,
+          beatTitle: beat.title,
         }),
       });
 

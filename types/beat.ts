@@ -14,6 +14,8 @@ export interface Beat {
   stripeStemsId: string;
   priceWav: number;
   priceStems: number;
+  wavDownloadUrl: string | null;
+  stemsDownloadUrl: string | null;
   isSold: boolean;
   soldAt: string | null;
   battleWins: number;
