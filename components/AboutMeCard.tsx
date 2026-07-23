@@ -27,10 +27,10 @@ export function AboutMeCard() {
   }, []);
 
   const stats = [
-    { label: 'ATTACK', value: 10 },
-    { label: 'DEFENSE', value: 10 },
-    { label: 'SPEED', value: 10 },
-    { label: 'SPECIAL', value: 10 },
+    { label: 'BEATMAKING', value: 10 },
+    { label: 'MIXING', value: 10 },
+    { label: 'MASTERING', value: 10 },
+    { label: 'PASSION', value: 10 },
   ];
 
   return (
@@ -97,10 +97,10 @@ export function AboutMeCard() {
                 className="text-4xl md:text-5xl font-comic tracking-wider"
                 style={{ textShadow: '0 0 20px #39ff14' }}
               >
-                MILLERS
+                ANDREW
               </h2>
               <p className="text-neon-blue tracking-[0.5em] text-sm mt-2">
-                MILLERS
+                MILLER
               </p>
             </div>
 
@@ -127,9 +127,7 @@ export function AboutMeCard() {
             <div className="border border-neon-blue/30 p-4">
               <p className="text-xs tracking-widest text-neon-blue mb-2">SPECIAL MOVE</p>
               <p className="text-sm tracking-wide text-gray-300">
-                "GHOST PRODUCER" — Invisible in the mix. Every beat hits like a 
-                finishing move. No AI. Pure analog soul digitized for the
-                modern era.
+                Born in 95, picked up my first instrument around 8 or 9, started making beats when i was 17 and started focusing on mixing and mastering in the past 5 years, I am extremely passionate about music as i have always been.
               </p>
             </div>
 
