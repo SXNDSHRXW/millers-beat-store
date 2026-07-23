@@ -16,6 +16,7 @@ export function BeatGrid() {
   const [selectedMood, setSelectedMood] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     async function loadBeats() {
@@ -25,6 +26,7 @@ export function BeatGrid() {
         setFilteredBeats(data);
       } catch (error) {
         console.error('Failed to load beats:', error);
+        setError(error instanceof Error ? error.message : 'Failed to connect to database');
         // Fallback demo data
         const demoBeats: Beat[] = [
           {
@@ -125,6 +127,22 @@ export function BeatGrid() {
           </div>
           <div className="w-48 h-2 bg-gray-800 rounded-full overflow-hidden">
             <div className="h-full bg-neon-green animate-pulse" style={{ width: '60%' }} />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="text-center max-w-md">
+          <div className="text-xl font-comic tracking-wider mb-4 text-red-400">
+            FAILED TO LOAD BEATS
+          </div>
+          <div className="text-sm text-gray-400 mb-4 font-mono">{error}</div>
+          <div className="text-xs text-gray-600">
+            Check that NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY are set in Cloudflare Pages environment variables.
           </div>
         </div>
       </div>
