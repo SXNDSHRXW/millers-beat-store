@@ -8,6 +8,11 @@ export function CustomCursor() {
   const trailsRef = useRef<HTMLDivElement[]>([]);
   const cursorType = useCursorStore((s) => s.cursorType);
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isTouch, setIsTouch] = useState(false);
+
+  useEffect(() => {
+    setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
+  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
