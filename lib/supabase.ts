@@ -112,7 +112,7 @@ export async function getBeatDownloadUrl(beatId: string, licenseType: 'wav' | 's
     .single();
 
   if (error || !data) return null;
-  return data[column] || null;
+  return (data as Record<string, string | null>)[column] || null;
 }
 
 export async function recordPurchase(purchase: Omit<Purchase, 'id' | 'createdAt'>): Promise<void> {
