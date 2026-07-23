@@ -80,13 +80,6 @@ create table battles (
 );
 ```
 
-## Stripe Setup
-
-1. Create products for each beat (WAV and Stems variants)
-2. Store price IDs in the `beats` table
-3. Set up webhook endpoint pointing to `/api/webhooks/stripe`
-4. Add webhook signing secret to `.env.local`
-
 ## License
 
 All beats are sold under exclusive license. See `/terms` for full details.
