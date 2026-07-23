@@ -25,14 +25,6 @@ An exclusive hip hop and grime beat store built with Next.js, featuring 3D comic
 - Howler.js (audio)
 - Zustand (state management)
 
-## Getting Started
-
-1. Clone the repo
-2. Copy `.env.example` to `.env.local` and fill in your keys
-3. Run `npm install`
-4. Run `npm run dev`
-5. Open `http://localhost:3000`
-
 ## Database Setup (Supabase)
 
 Create the following tables:
