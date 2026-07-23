@@ -78,7 +78,7 @@ create table battles (
   voter_ip text,
   created_at timestamp default now()
 );
-```
+```. 
 
 ## License
 
