@@ -60,7 +60,7 @@ export async function getBeats(filters?: {
 }
 
 export async function getBeatBySlug(slug: string): Promise<Beat | null> {
-  const { data, error } = await supabase
+  const { data, error } = await getSupabase()
     .from('beats')
     .select('*')
     .eq('slug', slug)
@@ -93,7 +93,7 @@ export async function getBeatBySlug(slug: string): Promise<Beat | null> {
 }
 
 export async function markBeatAsSold(beatId: string): Promise<void> {
-  await supabase
+  await getSupabase()
     .from('beats')
     .update({ is_sold: true, sold_at: new Date().toISOString() })
     .eq('id', beatId);
