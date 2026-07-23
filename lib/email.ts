@@ -1,6 +1,12 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY!);
+let _resend: Resend | null = null;
+function getResend() {
+  if (!_resend) {
+    _resend = new Resend(process.env.RESEND_API_KEY!);
+  }
+  return _resend;
+}
 
 export async function sendFulfillmentEmail({
   to,
@@ -15,7 +21,7 @@ export async function sendFulfillmentEmail({
 }) {
   const licenseName = licenseType === 'wav' ? '.WAV License' : '.WAV + Stems License';
 
-  await resend.emails.send({
+  await getResend().emails.send({
     from: 'MILLERS <beats@millers.store>',
     to,
     subject: `🥊 YOUR BEAT IS READY — ${beatTitle}`,

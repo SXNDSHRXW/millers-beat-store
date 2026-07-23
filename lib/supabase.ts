@@ -1,17 +1,24 @@
 import { createClient } from '@supabase/supabase-js';
+import type { SupabaseClient } from '@supabase/supabase-js';
 import { Beat, Purchase, Battle } from '@/types';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-export const supabase = createClient(supabaseUrl, supabaseKey);
+let _supabase: SupabaseClient | null = null;
+function getSupabase() {
+  if (!_supabase) {
+    _supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+  }
+  return _supabase;
+}
 
 export async function getBeats(filters?: {
   genre?: string;
   mood?: string;
   search?: string;
 }): Promise<Beat[]> {
-  let query = supabase.from('beats').select('*').order('created_at', { ascending: false });
+  let query = getSupabase().from('beats').select('*').order('created_at', { ascending: false });
 
   if (filters?.genre && filters.genre !== 'all') {
     query = query.eq('genre', filters.genre);
@@ -93,7 +100,7 @@ export async function markBeatAsSold(beatId: string): Promise<void> {
 }
 
 export async function recordPurchase(purchase: Omit<Purchase, 'id' | 'createdAt'>): Promise<void> {
-  await supabase.from('purchases').insert({
+  await getSupabase().from('purchases').insert({
     beat_id: purchase.beatId,
     stripe_session_id: purchase.stripeSessionId,
     customer_email: purchase.customerEmail,
@@ -103,7 +110,7 @@ export async function recordPurchase(purchase: Omit<Purchase, 'id' | 'createdAt'
 }
 
 export async function recordBattle(battle: Omit<Battle, 'id' | 'createdAt'>): Promise<void> {
-  await supabase.from('battles').insert({
+  await getSupabase().from('battles').insert({
     beat_a_id: battle.beatAId,
     beat_b_id: battle.beatBId,
     winner_id: battle.winnerId,
@@ -112,5 +119,5 @@ export async function recordBattle(battle: Omit<Battle, 'id' | 'createdAt'>): Pr
 }
 
 export async function incrementBattleWins(beatId: string): Promise<void> {
-  await supabase.rpc('increment_battle_wins', { beat_id: beatId });
+  await getSupabase().rpc('increment_battle_wins', { beat_id: beatId });
 }
