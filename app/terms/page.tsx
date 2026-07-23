@@ -30,18 +30,18 @@ export default function TermsPage() {
           <section>
             <h2 className="text-xl font-comic tracking-wider text-ink mb-4">WHAT YOU GET</h2>
             <ul className="space-y-2 list-disc list-inside">
-              <li>.WAV License: High-quality uncompressed WAV file (44.1kHz, 16-bit or 24-bit)</li>
+              <li>.WAV License: High-quality uncompressed WAV file (48kHz, 32Bit)</li>
               <li>.WAV + Stems License: WAV file plus individual stem tracks for mixing</li>
               <li>Full commercial rights — use in songs, videos, performances, streaming</li>
               <li>No royalty splits required</li>
-              <li>No attribution required (though credit is appreciated)</li>
+              <li>Attribution IS required (credited as named producer on song)</li>
             </ul>
           </section>
 
           <section>
             <h2 className="text-xl font-comic tracking-wider text-ink mb-4">NO AI POLICY</h2>
             <p>
-              All beats produced by MILLERS are 100% human-made. No artificial intelligence 
+              All beats produced by MILLERS are 100% human-made. No generative artificial intelligence 
               was used in the composition, arrangement, or production of any instrumental 
               available on this store. This guarantee is part of every license.
             </p>
@@ -50,7 +50,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-xl font-comic tracking-wider text-ink mb-4">NO SAMPLE CLEARANCE ISSUES</h2>
             <p>
-              All beats are created using original compositions and royalty-free elements. 
+              All beats are created using original compositions and royalty-free samples sourced from some of the best sample makers. 
               No uncleared samples are used. Buyers will not face sample clearance issues 
               when using these instrumentals.
             </p>
@@ -59,9 +59,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-xl font-comic tracking-wider text-ink mb-4">REFUND POLICY</h2>
             <p>
-              Due to the digital nature of the products, all sales are final. No refunds 
-              will be issued once files have been delivered. Please preview beats thoroughly 
-              before purchasing.
+              Due to the digital nature of the products, refunds are tricky, but email me and I will be happy to cut a deal with you if needed.
             </p>
           </section>
 
