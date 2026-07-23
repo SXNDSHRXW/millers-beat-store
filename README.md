@@ -3,7 +3,7 @@
 An exclusive hip hop and grime beat store built with Next.js, featuring 3D comic-book style UI, beat battles, and Stripe checkout.
 
 ## Features
-
+..
 - 3D Comic Book Aesthetic — Fighter-select style beat cards with mouse-tracking tilt
 - Beat Battle Mode — Pit beats against each other, vote for winners
 - Boss Card — Producer profile as a Final Boss character card
