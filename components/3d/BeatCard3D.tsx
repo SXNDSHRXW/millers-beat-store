@@ -121,22 +121,6 @@ export function BeatCard3D({ beat, index = 0 }: BeatCard3DProps) {
                 fill
                 className="object-cover"
               />
-
-              {/* Preview overlay */}
-              <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                <button
-                  onClick={handlePlay}
-                  className="w-16 h-16 border-2 border-neon-blue rounded-full flex items-center justify-center hover:bg-neon-blue/20 transition-colors"
-                  onMouseEnter={() => setCursorType('buy')}
-                  onMouseLeave={() => setCursorType('needle')}
-                >
-                  {isPlayingThis ? (
-                    <Pause size={28} className="text-neon-blue" />
-                  ) : (
-                    <Play size={28} className="text-neon-blue ml-1" />
-                  )}
-                </button>
-              </div>
             </div>
 
             {/* Info Layer */}
@@ -216,6 +200,25 @@ export function BeatCard3D({ beat, index = 0 }: BeatCard3DProps) {
 
           </div>
         </Link>
+
+        {/* Play overlay — outside Link to prevent navigation */}
+        <div
+          className={`absolute inset-0 bg-black/40 flex items-center justify-center transition-opacity pointer-events-none ${isHovered ? 'opacity-100' : 'opacity-0'}`}
+          style={{ top: 0, margin: '2px' }}
+        >
+          <button
+            onClick={handlePlay}
+            className="w-16 h-16 border-2 border-neon-blue rounded-full flex items-center justify-center hover:bg-neon-blue/20 transition-colors pointer-events-auto"
+            onMouseEnter={() => setCursorType('buy')}
+            onMouseLeave={() => setCursorType('needle')}
+          >
+            {isPlayingThis ? (
+              <Pause size={28} className="text-neon-blue" />
+            ) : (
+              <Play size={28} className="text-neon-blue ml-1" />
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );
