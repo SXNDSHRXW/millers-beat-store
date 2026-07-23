@@ -127,7 +127,7 @@ export function AboutMeCard() {
             <div className="border border-neon-blue/30 p-4">
               <p className="text-xs tracking-widest text-neon-blue mb-2">SPECIAL MOVE</p>
               <p className="text-sm tracking-wide text-gray-300">
-                Born in 95, picked up my first instrument around 8 or 9, started making beats when I was 17 and started focusing on mixing and mastering in the past 5 years, I am extremely passionate about music as I have always been.
+                From Bournemouth,UK,Born in 95, picked up my first instrument around 8 or 9, started making beats when I was 17 and started focusing on mixing and mastering in the past 5 years, I am extremely passionate about music as I have always been.
               </p>
             </div>
 
