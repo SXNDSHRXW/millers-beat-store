@@ -3,7 +3,6 @@ import './globals.css';
 import { CustomCursor } from '@/components/cursor/CustomCursor';
 import { AudioPlayer } from '@/components/AudioPlayer';
 import { HalftoneOverlay } from '@/components/HalftoneOverlay';
-import VantaFogBackground from '@/components/VantaFogBackground';
 
 export const metadata: Metadata = {
   title: 'MILLERS — Beat Store',
@@ -29,8 +28,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="text-ink min-h-screen">
-        <VantaFogBackground />
+      <body className="bg-void text-ink min-h-screen">
         <HalftoneOverlay />
         <CustomCursor />
         <AudioPlayer />
