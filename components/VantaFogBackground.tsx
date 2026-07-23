@@ -10,128 +10,89 @@ export default function VantaFogBackground() {
     const container = containerRef.current;
     if (!container) return;
 
-    // Scene setup
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 30;
+
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000,
+    );
+    camera.position.z = 5;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x050505, 1);
     container.appendChild(renderer.domElement);
 
-    // Fog particles
-    const particleCount = 200;
+    // Fog particle system
+    const particleCount = 300;
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
-    const sizes = new Float32Array(particleCount);
-    const speeds: number[] = [];
 
     for (let i = 0; i < particleCount; i++) {
-      positions[i * 3] = (Math.random() - 0.5) * 80;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * 50;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 40;
-      sizes[i] = Math.random() * 8 + 2;
-      speeds.push(Math.random() * 0.02 + 0.005);
+      positions[i * 3] = (Math.random() - 0.5) * 20;
+      positions[i * 3 + 1] = (Math.random() - 0.5) * 14;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 10;
     }
 
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
-    // Create shader material for soft fog-like particles
-    const material = new THREE.ShaderMaterial({
-      uniforms: {
-        uTime: { value: 0 },
-        uColor1: { value: new THREE.Color('#021e49') },
-        uColor2: { value: new THREE.Color('#12491c') },
-        uColor3: { value: new THREE.Color('#0a0a2e') },
-      },
-      vertexShader: /* glsl */ `
-        attribute float size;
-        varying vec3 vPosition;
-        varying float vSize;
-        void main() {
-          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-          gl_PointSize = size * (200.0 / -mvPosition.z);
-          gl_Position = projectionMatrix * mvPosition;
-          vPosition = position;
-          vSize = size;
-        }
-      `,
-      fragmentShader: /* glsl */ `
-        varying vec3 vPosition;
-        varying float vSize;
-        uniform float uTime;
-        uniform vec3 uColor1;
-        uniform vec3 uColor2;
-        uniform vec3 uColor3;
-        void main() {
-          float d = length(gl_PointCoord - 0.5) * 2.0;
-          float alpha = smoothstep(1.0, 0.0, d) * 0.15;
-          float mixFactor = sin(vPosition.x * 0.1 + uTime) * 0.5 + 0.5;
-          vec3 color = mix(uColor1, uColor2, mixFactor);
-          color = mix(color, uColor3, sin(vPosition.y * 0.08 + uTime * 0.7) * 0.5 + 0.5);
-          gl_FragColor = vec4(color, alpha);
-        }
-      `,
-      transparent: true,
-      depthWrite: false,
+    const material = new THREE.PointsMaterial({
+      size: 0.4,
+      vertexColors: false,
       blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      transparent: true,
+      opacity: 0.35,
+      color: new THREE.Color('#021e49'),
     });
 
     const particles = new THREE.Points(geometry, material);
     scene.add(particles);
 
-    // Fog layer planes for depth
-    const createFogPlane = (y: number, opacity: number, scale: number) => {
-      const planeGeo = new THREE.PlaneGeometry(100, 30);
-      const planeMat = new THREE.ShaderMaterial({
-        uniforms: {
-          uTime: { value: 0 },
-          uOpacity: { value: opacity },
-          uColor: { value: new THREE.Color('#050510') },
-        },
-        vertexShader: /* glsl */ `
-          varying vec2 vUv;
-          void main() {
-            vUv = uv;
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-          }
-        `,
-        fragmentShader: /* glsl */ `
-          varying vec2 vUv;
-          uniform float uTime;
-          uniform float uOpacity;
-          uniform vec3 uColor;
-          float noise(vec2 p) {
-            return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453);
-          }
-          void main() {
-            float n = noise(vUv * 10.0 + uTime * 0.02);
-            float alpha = smoothstep(0.3, 0.7, n) * uOpacity;
-            gl_FragColor = vec4(uColor, alpha);
-          }
-        `,
-        transparent: true,
-        depthWrite: false,
-        blending: THREE.NormalBlending,
-      });
-      const plane = new THREE.Mesh(planeGeo, planeMat);
-      plane.position.y = y;
-      plane.scale.set(scale, scale, 1);
-      return plane;
-    };
+    // Second layer — brighter, larger particles
+    const geo2 = new THREE.BufferGeometry();
+    const pos2 = new Float32Array(150 * 3);
+    for (let i = 0; i < 150; i++) {
+      pos2[i * 3] = (Math.random() - 0.5) * 24;
+      pos2[i * 3 + 1] = (Math.random() - 0.5) * 16;
+      pos2[i * 3 + 2] = (Math.random() - 0.5) * 12;
+    }
+    geo2.setAttribute('position', new THREE.BufferAttribute(pos2, 3));
+    const mat2 = new THREE.PointsMaterial({
+      size: 0.25,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      transparent: true,
+      opacity: 0.3,
+      color: new THREE.Color('#12491c'),
+    });
+    const particles2 = new THREE.Points(geo2, mat2);
+    scene.add(particles2);
 
-    const fogPlanes = [
-      createFogPlane(-8, 0.08, 1.5),
-      createFogPlane(8, 0.06, 1.8),
-      createFogPlane(0, 0.1, 2.0),
-    ];
-    fogPlanes.forEach(p => scene.add(p));
+    // Glow highlights
+    const geo3 = new THREE.BufferGeometry();
+    const pos3 = new Float32Array(60 * 3);
+    for (let i = 0; i < 60; i++) {
+      pos3[i * 3] = (Math.random() - 0.5) * 18;
+      pos3[i * 3 + 1] = (Math.random() - 0.5) * 10;
+      pos3[i * 3 + 2] = (Math.random() - 0.5) * 8;
+    }
+    geo3.setAttribute('position', new THREE.BufferAttribute(pos3, 3));
+    const mat3 = new THREE.PointsMaterial({
+      size: 0.6,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      transparent: true,
+      opacity: 0.2,
+      color: new THREE.Color('#00d4ff'),
+    });
+    const highlights = new THREE.Points(geo3, mat3);
+    scene.add(highlights);
 
     // Mouse tracking
-    let mouseX = 0;
-    let mouseY = 0;
     let targetMouseX = 0;
     let targetMouseY = 0;
 
@@ -150,38 +111,45 @@ export default function VantaFogBackground() {
 
     window.addEventListener('resize', handleResize);
 
-    // Animation loop
     let animationId: number;
     const clock = new THREE.Clock();
 
     const animate = () => {
       animationId = requestAnimationFrame(animate);
-      const elapsed = clock.getElapsedTime();
+      const elapsed = clock.getElapsedTime() * 0.3;
 
-      // Smooth mouse follow
-      mouseX += (targetMouseX - mouseX) * 0.02;
-      mouseY += (targetMouseY - mouseY) * 0.02;
-
-      // Move particles
-      const posArray = geometry.attributes.position.array as Float32Array;
+      // Layer 1 — float upward with slow drift
+      const p1 = geometry.attributes.position.array as Float32Array;
       for (let i = 0; i < particleCount; i++) {
-        posArray[i * 3 + 1] += speeds[i];
-        if (posArray[i * 3 + 1] > 25) posArray[i * 3 + 1] = -25;
-        // Subtle horizontal drift
-        posArray[i * 3] += Math.sin(elapsed * 0.3 + i) * 0.005;
+        p1[i * 3 + 1] += 0.003;
+        if (p1[i * 3 + 1] > 7) p1[i * 3 + 1] = -7;
+        p1[i * 3] += Math.sin(elapsed + i * 0.1) * 0.001;
       }
       geometry.attributes.position.needsUpdate = true;
 
-      // Update uniforms
-      material.uniforms.uTime.value = elapsed;
-      fogPlanes.forEach(p => {
-        (p.material as THREE.ShaderMaterial).uniforms.uTime.value = elapsed;
-      });
+      // Layer 2 — opposite drift
+      const p2 = geo2.attributes.position.array as Float32Array;
+      for (let i = 0; i < 150; i++) {
+        p2[i * 3 + 1] += 0.002;
+        if (p2[i * 3 + 1] > 8) p2[i * 3 + 1] = -8;
+        p2[i * 3] += Math.cos(elapsed + i * 0.15) * 0.0015;
+      }
+      geo2.attributes.position.needsUpdate = true;
 
-      // Camera follows mouse subtly
-      camera.position.x += (mouseX * 3 - camera.position.x) * 0.01;
-      camera.position.y += (mouseY * 2 - camera.position.y) * 0.01;
-      camera.lookAt(scene.position);
+      // Highlights — pulse and drift
+      const p3 = geo3.attributes.position.array as Float32Array;
+      for (let i = 0; i < 60; i++) {
+        p3[i * 3 + 1] += 0.004;
+        if (p3[i * 3 + 1] > 5) p3[i * 3 + 1] = -5;
+        p3[i * 3] += Math.sin(elapsed * 1.5 + i) * 0.002;
+      }
+      geo3.attributes.position.needsUpdate = true;
+      mat3.opacity = 0.15 + Math.sin(elapsed * 0.5) * 0.08;
+
+      // Mouse parallax
+      camera.position.x += (targetMouseX * 1.5 - camera.position.x) * 0.02;
+      camera.position.y += (targetMouseY * 1.0 - camera.position.y) * 0.02;
+      camera.lookAt(0, 0, 0);
 
       renderer.render(scene, camera);
     };
@@ -192,13 +160,15 @@ export default function VantaFogBackground() {
       cancelAnimationFrame(animationId);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
-      container.removeChild(renderer.domElement);
+      if (container.contains(renderer.domElement)) {
+        container.removeChild(renderer.domElement);
+      }
       geometry.dispose();
       material.dispose();
-      fogPlanes.forEach(p => {
-        p.geometry.dispose();
-        (p.material as THREE.ShaderMaterial).dispose();
-      });
+      geo2.dispose();
+      mat2.dispose();
+      geo3.dispose();
+      mat3.dispose();
       renderer.dispose();
     };
   }, []);
@@ -206,8 +176,16 @@ export default function VantaFogBackground() {
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-0 pointer-events-none"
-      style={{ background: '#050505' }}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        zIndex: 0,
+        pointerEvents: 'none',
+      }}
     />
   );
 }
+
