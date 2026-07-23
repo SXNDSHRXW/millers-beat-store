@@ -18,17 +18,17 @@ export function generateSlug(title: string): string {
 }
 
 export function getBeatStats(beat: { bpm: number; mood: string[] }): {
-  attack: number;
-  defense: number;
-  speed: number;
-  special: number;
+  vibe: number;
+  groove: number;
+  bass: number;
+  energy: number;
 } {
   // Generate deterministic stats from beat properties
   const seed = beat.bpm + beat.mood.join('').length;
   return {
-    attack: Math.min(10, Math.max(1, (seed % 10) + 1)),
-    defense: Math.min(10, Math.max(1, ((seed * 7) % 10) + 1)),
-    speed: Math.min(10, Math.max(1, Math.floor(beat.bpm / 15))),
-    special: Math.min(10, Math.max(1, ((seed * 13) % 10) + 1)),
+    vibe: Math.min(10, Math.max(1, (seed % 10) + 1)),
+    groove: Math.min(10, Math.max(1, ((seed * 7) % 10) + 1)),
+    bass: Math.min(10, Math.max(1, Math.floor(beat.bpm / 15))),
+    energy: Math.min(10, Math.max(1, ((seed * 13) % 10) + 1)),
   };
 }

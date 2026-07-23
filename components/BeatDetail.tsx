@@ -61,8 +61,8 @@ export function BeatDetail({ beat }: BeatDetailProps) {
     }
   };
 
-  const statLabels = ['ATTACK', 'DEFENSE', 'SPEED', 'SPECIAL'];
-  const statValues = [stats.attack, stats.defense, stats.speed, stats.special];
+  const statLabels = ['VIBE', 'GROOVE', 'BASS', 'ENERGY'];
+  const statValues = [stats.vibe, stats.groove, stats.bass, stats.energy];
 
   return (
     <div className="max-w-7xl mx-auto px-4 md:px-8 py-12">
@@ -134,7 +134,7 @@ export function BeatDetail({ beat }: BeatDetailProps) {
 
           {/* Stats */}
           <div className="border border-white/10 p-6 space-y-3">
-            <h3 className="text-xs tracking-widest text-gray-500 mb-4">FIGHTER STATS</h3>
+            <h3 className="text-xs tracking-widest text-gray-500 mb-4">SONG STATS</h3>
             {statLabels.map((label, i) => (
               <div key={label} className="flex items-center gap-4">
                 <span className="text-xs tracking-wider w-20">{label}</span>

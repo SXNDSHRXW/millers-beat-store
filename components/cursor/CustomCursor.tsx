@@ -77,6 +77,8 @@ export function CustomCursor() {
     }
   };
 
+  if (isTouch) return null;
+
   return (
     <>
       {/* Trail ghosts */}

@@ -127,13 +127,13 @@ export function AboutMeCard() {
             <div className="border border-neon-blue/30 p-4">
               <p className="text-xs tracking-widest text-neon-blue mb-2">SPECIAL MOVE</p>
               <p className="text-sm tracking-wide text-gray-300">
-                Born in 95, picked up my first instrument around 8 or 9, started making beats when i was 17 and started focusing on mixing and mastering in the past 5 years, I am extremely passionate about music as i have always been.
+                Born in 95, picked up my first instrument around 8 or 9, started making beats when I was 17 and started focusing on mixing and mastering in the past 5 years, I am extremely passionate about music as I have always been.
               </p>
             </div>
 
             <p className="text-sm text-gray-400 leading-relaxed tracking-wide">
               Producer and beatmaker specializing in hip hop and grime instrumentals. 
-              Every track is handcrafted from scratch with zero AI involvement and 
+              Every track is handcrafted from scratch with zero generative AI and 
               zero sample clearance issues. Exclusive licenses only — once you buy it, 
               it's yours and yours alone.
             </p>

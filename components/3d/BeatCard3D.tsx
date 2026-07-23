@@ -82,8 +82,8 @@ export function BeatCard3D({ beat, index = 0 }: BeatCard3DProps) {
     }
   };
 
-  const statLabels = ['ATTACK', 'DEFENSE', 'SPEED', 'SPECIAL'];
-  const statValues = [stats.attack, stats.defense, stats.speed, stats.special];
+  const statLabels = ['VIBE', 'GROOVE', 'BASS', 'ENERGY'];
+  const statValues = [stats.vibe, stats.groove, stats.bass, stats.energy];
 
   return (
     <div className="perspective-1000">

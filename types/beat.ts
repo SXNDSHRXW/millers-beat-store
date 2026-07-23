@@ -22,10 +22,10 @@ export interface Beat {
 }
 
 export interface BeatStats {
-  attack: number;
-  defense: number;
-  speed: number;
-  special: number;
+  vibe: number;
+  groove: number;
+  bass: number;
+  energy: number;
 }
 
 export interface Purchase {
