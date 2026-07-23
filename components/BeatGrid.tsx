@@ -74,10 +74,10 @@ export function BeatGrid() {
             genre: 'BOOM BAP', mood: ['Chill', 'Dark'], tags: ['boom bap', 'lofi'],
             description: 'Classic boom bap vibe.', previewUrl: '',
             artworkUrl: 'https://via.placeholder.com/600x800/1a1a1a/00d4ff?text=MILLERS1459749411175-04bf5292ceea?w=600&h=800&fit=crop',
-            stripeWavId: 'price_wav_5', stripewavDownloadUrl: null, stemsDownloadUrl: null,
+            stripeWavId: 'price_wav_5', stripeStemsId: 'price_stems_5',
+            priceWav: 2499, priceStems: 4499, wavDownloadUrl: null, stemsDownloadUrl: null,
             isSold: false, soldAt: null, battleWins: 3, battleLosses: 4,
-           9, isSold: false, soldAt: null,
-            battleWins: 3, battleLosses: 4, createdAt: new Date().toISOString(),
+            createdAt: new Date().toISOString(),
           },
           {
             id: '6', title: 'NEON DREAMS', slug: 'neon-dreams', bpm: 130, musicalKey: 'E Minor',
